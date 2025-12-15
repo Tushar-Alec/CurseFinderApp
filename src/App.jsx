@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import React, { useState, useMemo } from 'react';
+import { courses } from './data';
+import SearchBar from './components/SearchBar';
+import CourseList from './components/CourseList';
+import './App.css'; 
+import QuoteDisplay from './components/QuoteDisplay'; 
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredCourses = useMemo(() => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+    return courses.filter(course =>
+      course.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+      course.category.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+  }, [searchTerm]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App">
+      <h1>Course Finder</h1>
+       <QuoteDisplay />
+      <SearchBar onSearchChange={setSearchTerm} />
+      <CourseList courses={filteredCourses} />
+    </div>
+  );
 }
 
-export default App
+export default App;
